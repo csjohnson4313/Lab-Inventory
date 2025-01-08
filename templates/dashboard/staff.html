@@ -4,7 +4,6 @@
 
 {% block content %} 
 
-    <h1> This is the Staff Page</h1>
     <div class="container mt-5">
         <table class="table table-bordered" id="dataTable">
             <thead>
@@ -27,15 +26,21 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-success" onclick="exportTableToExcel('table.xlsx')">Export to Excel</button>
+        <button class="btn btn-success" onclick="exportTableToExcel()">Export to Excel</button>
 
     </div>
     
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script>
-    function exportTableToExcel(filename) {
+    function exportTableToExcel() {
         const table = document.getElementById("dataTable");
         const workbook = XLSX.utils.table_to_book(table);
+
+        // Generate a filename with the current date
+        const date = new Date();
+        const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        const filename = `OrderForm_${formattedDate}.xlsx`;
+
         XLSX.writeFile(workbook, filename);
 }
 </script>

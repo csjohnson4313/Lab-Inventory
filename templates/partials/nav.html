@@ -1,7 +1,7 @@
 <!--Navbar-->
 <style>
     .custom-navbar {
-        background-color: #d417b5; 
+        background-color: #582c83; 
         color: white;
     }
 </style>
@@ -21,14 +21,14 @@
                     <a class="nav-link text-white" href="{% url 'dashboard-index' %}">Dashboard <span
                             class="sr-only">(current)</span></a>
                 </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link text-white" href="{% url 'dashboard-staff' %}">Order List <span
                             class="sr-only">(current)</span></a>
                 </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Logout</a>
+                    <a class="nav-link text-white" href="#">Admin Login</a>
                 </li>
             </ul>
 
@@ -36,3 +36,22 @@
     </div>
 </nav>
 <!--End Navbar-->
+<br>
+<!--Topside-->
+<div class="container custom">
+    <div class="row mt-12">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header custom-navbar text-white">
+                    Information
+                </div>
+                <div class="card-body">
+                    <marquee behavior="" direction="">
+                        <h1 class="my-8">WPTCE 2025 Submission Deadline Jan 24</h1>
+                    </marquee>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Topside-->
