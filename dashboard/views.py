@@ -8,3 +8,6 @@ def index(request):
 
 def staff(request):
     return render(request, 'dashboard/staff.html')
+
+def admin(request):
+    return render(request, 'admin.html')

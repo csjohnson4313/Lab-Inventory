@@ -1,5 +1,15 @@
+
+
 <!--Table-->
 <div class="container">
+        <!-- Search Box -->
+        <input
+        type="text"
+        id="searchInput"
+        class="form-control mb-3"
+        placeholder="Search by Names or Category"
+        onkeyup="searchTable()"
+        />
     <div class="row my-4">
         <div class="col-md-4">
             <div class="border bg-white p-3">
@@ -29,7 +39,7 @@
             </div>
         </div>
         <div class="col-md-8">
-            <table class="table bg-white">
+            <table class="table bg-white" id="dataTable">
                 <thead class="custom-navbar">
                     <tr class="text-white">
                         <th scope="col">#</th>
@@ -77,6 +87,31 @@
 
 </div>
 
-
-
 <!--End Table-->
+
+
+<script>
+    // Function to search the table
+    function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("dataTable");
+        const rows = table.getElementsByTagName("tr");
+    
+        for (let i = 1; i < rows.length; i++) { // Skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+    
+            // Check if any cell in the row matches the filter
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(filter)) {
+                    match = true;
+                    break;
+                }
+            }
+    
+            // Show or hide the row based on the match
+            rows[i].style.display = match ? "" : "none";
+        }
+    }
+    </script>
