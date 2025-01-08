@@ -27,10 +27,11 @@
                 </tr>
             </tbody>
         </table>
+        <button class="btn btn-success" onclick="exportTableToExcel('table.xlsx')">Export to Excel</button>
+
     </div>
     
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <button class="btn btn-success" onclick="exportTableToExcel('table.xlsx')">Export to Excel</button>
     <script>
     function exportTableToExcel(filename) {
         const table = document.getElementById("dataTable");
