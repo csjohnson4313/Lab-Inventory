@@ -4,45 +4,49 @@
 
 {% block content %} 
 
-    <div class="container mt-5">
-        <table class="table table-bordered" id="dataTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>City</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>John</td>
-                    <td>25</td>
-                    <td>New York</td>
-                </tr>
-                <tr>
-                    <td>Jane</td>
-                    <td>30</td>
-                    <td>London</td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn btn-success" onclick="exportTableToExcel()">Export to Excel</button>
+{% load crispy_forms_tags %}
 
-    </div>
+<div class="container">
+    <h2>Low Items</h2>
+    <table class="table bg-white" id="lowTable">
+        <thead class="custom-navbar">
+            <tr class="text-white">
+                <th scope="col">Package</th>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.package }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.location }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn btn-success" onclick="exportTableToExcel()">Export to Excel</button>
+    <script>
+        function exportTableToExcel() {
+            const table = document.getElementById("lowTable");
+            const workbook = XLSX.utils.table_to_book(table);
+    
+            // Generate a filename with the current date
+            const date = new Date();
+            const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            const filename = `OrderForm_${formattedDate}.xlsx`;
+    
+            XLSX.writeFile(workbook, filename);
+    }
+    </script>
+</div>
     
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <script>
-    function exportTableToExcel() {
-        const table = document.getElementById("dataTable");
-        const workbook = XLSX.utils.table_to_book(table);
-
-        // Generate a filename with the current date
-        const date = new Date();
-        const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-        const filename = `OrderForm_${formattedDate}.xlsx`;
-
-        XLSX.writeFile(workbook, filename);
-}
-</script>
+    
 
 {% endblock %}

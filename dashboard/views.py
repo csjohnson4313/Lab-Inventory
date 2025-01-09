@@ -26,7 +26,14 @@ def index(request):
     return render(request, 'dashboard/index.html', context)
 
 def staff(request):
-    return render(request, 'dashboard/staff.html')
+    # Define your threshold for low stock
+    threshold = 10  # Replace with your desired threshold
+    low_stock_items = Product.objects.filter(quantity__lt=threshold).order_by('category', 'name')
+    context={
+        'items': low_stock_items,
+    }
+    
+    return render(request, 'dashboard/staff.html',context)
 
 def admin(request):
     return render(request, 'admin.html')
