@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from dashboard.models import MarqueeText
-from .models import Product
-from .forms import ProductForm
+from .models import Product, CustomOrderItem
+from .forms import ProductForm, CustomOrderItemForm
 
 # Create your views here.
 
@@ -26,14 +26,28 @@ def index(request):
     return render(request, 'dashboard/index.html', context)
 
 def staff(request):
-    # Define your threshold for low stock
-    threshold = 10  # Replace with your desired threshold
+    # Threshold for low stock
+    threshold = 10
     low_stock_items = Product.objects.filter(quantity__lt=threshold).order_by('category', 'name')
-    context={
+
+    # Handle custom item addition
+    if request.method == 'POST':
+        form = CustomOrderItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard-staff')
+    else:
+        form = CustomOrderItemForm()
+
+    # Fetch existing custom items
+    custom_items = CustomOrderItem.objects.all().order_by('name')
+
+    context = {
         'items': low_stock_items,
+        'custom_items': custom_items,
+        'custom_form': form,
     }
-    
-    return render(request, 'dashboard/staff.html',context)
+    return render(request, 'dashboard/staff.html', context)
 
 def admin(request):
     return render(request, 'admin.html')
@@ -63,3 +77,9 @@ def remove_quantity(request, pk):
         except ValueError:
             pass  # Handle invalid input gracefully
     return redirect('dashboard-index')  # Replace 'your_table_page' with the name of your page's URL pattern
+
+
+def delete_custom_item(request, pk):
+    custom_item = get_object_or_404(CustomOrderItem, pk=pk)
+    custom_item.delete()
+    return redirect('dashboard-staff')

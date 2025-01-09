@@ -55,3 +55,12 @@ class MarqueeText(models.Model):
 
     def __str__(self):
         return self.text
+
+class CustomOrderItem(models.Model):
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=50, choices=CATEGORY, null=True, blank=True)
+    quantity = models.PositiveIntegerField()
+    notes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name} ({self.quantity})'
