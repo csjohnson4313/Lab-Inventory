@@ -49,3 +49,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.package} | {self.name} | #{ self.quantity} | {self.location}'
+
+class MarqueeText(models.Model):
+    text = models.CharField(max_length=255, help_text="Text to display in the marquee")
+
+    def __str__(self):
+        return self.text
