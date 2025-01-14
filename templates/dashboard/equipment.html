@@ -1,0 +1,67 @@
+{% extends 'partials/base.html' %}
+
+{% block title %} Equipment Management {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Equipment Management</h2>
+
+    <!-- Equipment Table -->
+    <table class="table bg-white">
+        <thead class="custom-navbar">
+            <tr class="text-white">
+                <th scope="col">Name</th>
+                <th scope="col">Location</th>
+                <th scope="col">Status</th>
+                <th scope="col">Checked Out By</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for equipment in equipment_items %}
+            <tr>
+                <td>{{ equipment.name }}</td>
+                <td>{{ equipment.location }}</td>
+                <td>
+                    {% if equipment.id in checked_out_ids %}
+                    Checked Out
+                    {% else %}
+                    Available
+                    {% endif %}
+                </td>
+                <td>
+                    {% for checkout in checkouts %}
+                        {% if checkout.equipment.id == equipment.id %}
+                        {{ checkout.user }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if equipment.id in checked_out_ids %}
+                    <!-- Check-In Button -->
+                    {% for checkout in checkouts %}
+                        {% if checkout.equipment.id == equipment.id %}
+                        <form method="POST" action="{% url 'checkin_equipment' checkout.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Check In</button>
+                        </form>
+                        {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <!-- Check-Out Form -->
+                    <form method="POST" action="{% url 'checkout_equipment' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="equipment" value="{{ equipment.id }}">
+                        <input type="text" name="user" placeholder="User Name" class="form-control mb-2">
+                        <input type="text" name="location" placeholder="Location" class="form-control mb-2">
+                        <button type="submit" class="btn btn-success btn-sm">Check Out</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+                
+    </table>
+</div>
+{% endblock %}

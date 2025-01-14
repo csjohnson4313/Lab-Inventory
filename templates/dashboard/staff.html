@@ -27,6 +27,13 @@
                 <td>{{ item.category }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>{{ item.location }}</td>
+                <td>
+                    {% if item.link %}
+                    <a href="{{ item.link }}" target="_blank" class="btn btn-primary btn-sm">View</a>
+                    {% else %}
+                    No Link
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -42,26 +49,40 @@
             const customTable = document.querySelector("table:nth-of-type(2)"); // Select the second table
     
             // Extract data from Low Stock Items table
-            const lowStockData = XLSX.utils.sheet_to_json(XLSX.utils.table_to_sheet(lowTable), { header: 1 });
-            lowStockData.unshift(["Low Stock Items"]); // Add a title row for the section
-            lowStockData.push([]); // Add an empty row for spacing
+            const lowStockRows = Array.from(lowTable.querySelectorAll("tbody tr"));
+            const lowStockData = lowStockRows.map(row => {
+                const cells = Array.from(row.querySelectorAll("td"));
+                return [
+                    cells[0]?.innerText || "", // Package
+                    cells[1]?.innerText || "", // Name
+                    cells[2]?.innerText || "", // Category
+                    cells[3]?.innerText || "", // Quantity
+                    cells[4]?.innerText || "", // Location
+                    cells[5]?.querySelector("a")?.href || "No Link" // Extract the actual URL or "No Link"
+                ];
+            });
+            // Add headers and section title for the Low Stock table
+            lowStockData.unshift(["Package", "Name", "Category", "Quantity", "Location", "Link"]);
+            lowStockData.unshift(["Low Stock Items"]);
     
             // Extract data from Custom Order Items table
             const customRows = Array.from(customTable.querySelectorAll("tbody tr"));
             const customOrderData = customRows.map(row => {
                 const cells = Array.from(row.querySelectorAll("td"));
                 return [
-                    "", // Add an empty column for alignment
-                    cells[0]?.innerText || "", // Name
-                    cells[1]?.innerText || "", // Category
-                    cells[2]?.innerText || "", // Quantity
-                    cells[3]?.innerText || ""  // Notes
+                    cells[0]?.innerText || "", // Package
+                    cells[1]?.innerText || "", // Name
+                    cells[2]?.innerText || "", // Category
+                    cells[3]?.innerText || "", // Quantity
+                    cells[4]?.innerText || ""  // Notes
                 ];
             });
-            customOrderData.unshift(["", "Custom Order Items"]); // Add a title row for the section with alignment
+            // Add headers and section title for the Custom Order table
+            customOrderData.unshift(["Package", "Name", "Category", "Quantity", "Notes"]);
+            customOrderData.unshift(["Custom Order Items"]);
     
             // Combine the data from both tables
-            const combinedData = lowStockData.concat(customOrderData);
+            const combinedData = lowStockData.concat([[]]).concat(customOrderData);
     
             // Create a new worksheet from the combined data
             const worksheet = XLSX.utils.aoa_to_sheet(combinedData);
@@ -82,6 +103,8 @@
     
     
     
+    
+    
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
     <!-- Custom Items Section -->
@@ -89,6 +112,7 @@
     <table class="table bg-white">
         <thead class="custom-navbar">
             <tr class="text-white">
+                <th scope="col">Package</th>
                 <th scope="col">Name</th>
                 <th scope="col">Category</th>
                 <th scope="col">Quantity</th>
@@ -99,6 +123,7 @@
         <tbody>
             {% for custom_item in custom_items %}
             <tr>
+                <td>{{ custom_item.package }}</td>
                 <td>{{ custom_item.name }}</td>
                 <td>{{ custom_item.category }}</td>
                 <td>{{ custom_item.quantity }}</td>
